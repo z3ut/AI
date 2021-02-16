@@ -6,5 +6,7 @@ namespace Inventor.Core
 	{
 		ICollection<IStatement> Statements
 		{ get; }
+
+		void Expand(IEnumerable<IStatement> statements);
 	}
 }

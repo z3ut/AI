@@ -9,8 +9,24 @@ using Inventor.Core.Questions;
 
 namespace Inventor.Core.Processors
 {
-	public sealed class CheckStatementProcessor : QuestionProcessor<CheckStatementQuestion>
+	public sealed class CheckStatementProcessor<StatementT> : QuestionProcessor<CheckStatementQuestion, StatementT>
+		where StatementT : IStatement
 	{
+		protected override Boolean DoesStatementMatch(StatementT statement)
+		{
+			
+		}
+
+		protected override Boolean AreEnoughToAnswer(IEnumerable<StatementT> statements)
+		{
+			
+		}
+
+		protected override IAnswer CreateAnswer(ICollection<StatementT> statements)
+		{
+			
+		}
+
 		public override IAnswer Process(IQuestionProcessingContext<CheckStatementQuestion> context)
 		{
 			var question = context.Question;

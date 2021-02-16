@@ -10,8 +10,23 @@ using Inventor.Core.Questions;
 
 namespace Inventor.Core.Processors
 {
-	public sealed class FindSubjectAreaProcessor : QuestionProcessor<FindSubjectAreaQuestion>
+	public sealed class FindSubjectAreaProcessor : QuestionProcessor<FindSubjectAreaQuestion, GroupStatement>
 	{
+		protected override Boolean DoesStatementMatch(GroupStatement statement)
+		{
+			
+		}
+
+		protected override Boolean AreEnoughToAnswer(IEnumerable<GroupStatement> statements)
+		{
+			
+		}
+
+		protected override IAnswer CreateAnswer(ICollection<GroupStatement> statements)
+		{
+			
+		}
+
 		public override IAnswer Process(IQuestionProcessingContext<FindSubjectAreaQuestion> context)
 		{
 			var question = context.Question;

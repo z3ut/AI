@@ -8,7 +8,7 @@ namespace Inventor.Core.Base
 		#region Properties
 
 		public ICollection<IStatement> Statements
-		{ get; }
+		{ get; private set; }
 
 		#endregion
 
@@ -20,5 +20,12 @@ namespace Inventor.Core.Base
 		public Explanation(IStatement statement)
 			: this(new[] { statement })
 		{ }
+
+		public void Expand(IEnumerable<IStatement> statements)
+		{
+			var list = new List<IStatement>(Statements);
+			list.AddRange(statements);
+			Statements = list;
+		}
 	}
 }

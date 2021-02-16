@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Inventor.Core.Answers;
@@ -9,8 +10,23 @@ using Inventor.Core.Questions;
 
 namespace Inventor.Core.Processors
 {
-	public sealed class DescribeSubjectAreaProcessor : QuestionProcessor<DescribeSubjectAreaQuestion>
+	public sealed class DescribeSubjectAreaProcessor : QuestionProcessor<DescribeSubjectAreaQuestion, GroupStatement>
 	{
+		protected override Boolean DoesStatementMatch(GroupStatement statement)
+		{
+			
+		}
+
+		protected override Boolean AreEnoughToAnswer(IEnumerable<GroupStatement> statements)
+		{
+			
+		}
+
+		protected override IAnswer CreateAnswer(ICollection<GroupStatement> statements)
+		{
+			
+		}
+
 		public override IAnswer Process(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)
 		{
 			var question = context.Question;

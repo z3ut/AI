@@ -10,8 +10,23 @@ using Inventor.Core.Questions;
 
 namespace Inventor.Core.Processors
 {
-	public sealed class SignValueProcessor : QuestionProcessor<SignValueQuestion>
+	public sealed class SignValueProcessor : QuestionProcessor<SignValueQuestion, SignValueStatement>
 	{
+		protected override Boolean DoesStatementMatch(SignValueStatement statement)
+		{
+			
+		}
+
+		protected override Boolean AreEnoughToAnswer(IEnumerable<SignValueStatement> statements)
+		{
+			
+		}
+
+		protected override IAnswer CreateAnswer(ICollection<SignValueStatement> statements)
+		{
+			
+		}
+
 		public override IAnswer Process(IQuestionProcessingContext<SignValueQuestion> context)
 		{
 			var question = context.Question;

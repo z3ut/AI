@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Inventor.Core.Answers;
@@ -9,8 +10,23 @@ using Inventor.Core.Questions;
 
 namespace Inventor.Core.Processors
 {
-	public sealed class EnumerateChildrenProcessor : QuestionProcessor<EnumerateChildrenQuestion>
+	public sealed class EnumerateChildrenProcessor : QuestionProcessor<EnumerateChildrenQuestion, HasPartStatement>
 	{
+		protected override Boolean DoesStatementMatch(HasPartStatement statement)
+		{
+			
+		}
+
+		protected override Boolean AreEnoughToAnswer(IEnumerable<HasPartStatement> statements)
+		{
+			
+		}
+
+		protected override IAnswer CreateAnswer(ICollection<HasPartStatement> statements)
+		{
+			
+		}
+
 		public override IAnswer Process(IQuestionProcessingContext<EnumerateChildrenQuestion> context)
 		{
 			var question = context.Question;

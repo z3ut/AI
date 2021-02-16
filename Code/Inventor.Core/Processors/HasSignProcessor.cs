@@ -10,8 +10,23 @@ using Inventor.Core.Questions;
 
 namespace Inventor.Core.Processors
 {
-	public sealed class HasSignProcessor : QuestionProcessor<HasSignQuestion>
+	public sealed class HasSignProcessor : QuestionProcessor<HasSignQuestion, HasSignStatement>
 	{
+		protected override Boolean DoesStatementMatch(HasSignStatement statement)
+		{
+			
+		}
+
+		protected override Boolean AreEnoughToAnswer(IEnumerable<HasSignStatement> statements)
+		{
+			
+		}
+
+		protected override IAnswer CreateAnswer(ICollection<HasSignStatement> statements)
+		{
+			
+		}
+
 		public override IAnswer Process(IQuestionProcessingContext<HasSignQuestion> context)
 		{
 			var question = context.Question;
