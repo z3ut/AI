@@ -13,19 +13,25 @@ namespace Inventor.Core.Processors
 	[Obsolete("This class will be removed as soon as QuestionDialog supports CheckStatementQuestion. Please, use CheckStatementQuestion with corresponding statement instead.")]
 	public sealed class IsSubjectAreaProcessor : QuestionProcessor<IsSubjectAreaQuestion, GroupStatement>
 	{
-		protected override Boolean DoesStatementMatch(GroupStatement statement)
+		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsSubjectAreaQuestion> context, GroupStatement statement)
 		{
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IEnumerable<GroupStatement> statements)
+		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<IsSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			
 		}
 
-		protected override IAnswer CreateAnswer(ICollection<GroupStatement> statements)
+		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			
+		}
+
+		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<IsSubjectAreaQuestion> context)
+		{
+			foreach (context.KnowledgeBase.)
+			yield return 
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<IsSubjectAreaQuestion> context)

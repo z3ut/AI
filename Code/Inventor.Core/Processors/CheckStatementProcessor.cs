@@ -12,19 +12,25 @@ namespace Inventor.Core.Processors
 	public sealed class CheckStatementProcessor<StatementT> : QuestionProcessor<CheckStatementQuestion, StatementT>
 		where StatementT : IStatement
 	{
-		protected override Boolean DoesStatementMatch(StatementT statement)
+		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<CheckStatementQuestion> context, StatementT statement)
 		{
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IEnumerable<StatementT> statements)
+		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<CheckStatementQuestion> context, ICollection<StatementT> statements)
 		{
 			
 		}
 
-		protected override IAnswer CreateAnswer(ICollection<StatementT> statements)
+		protected override IAnswer CreateAnswer(IQuestionProcessingContext<CheckStatementQuestion> context, ICollection<StatementT> statements)
 		{
 			
+		}
+
+		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<CheckStatementQuestion> context)
+		{
+			foreach (context.KnowledgeBase.)
+			yield return 
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<CheckStatementQuestion> context)

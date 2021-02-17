@@ -9,19 +9,25 @@ namespace Inventor.Core.Processors
 	public sealed class QuestionWithConditionProcessor<StatementT> : QuestionProcessor<QuestionWithCondition, StatementT>
 		where StatementT : IStatement
 	{
-		protected override Boolean DoesStatementMatch(StatementT statement)
+		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<QuestionWithCondition> context, StatementT statement)
 		{
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IEnumerable<StatementT> statements)
+		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<QuestionWithCondition> context, ICollection<StatementT> statements)
 		{
 			
 		}
 
-		protected override IAnswer CreateAnswer(ICollection<StatementT> statements)
+		protected override IAnswer CreateAnswer(IQuestionProcessingContext<QuestionWithCondition> context, ICollection<StatementT> statements)
 		{
 			
+		}
+
+		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<QuestionWithCondition> context)
+		{
+			foreach (context.KnowledgeBase.)
+			yield return 
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<QuestionWithCondition> context)

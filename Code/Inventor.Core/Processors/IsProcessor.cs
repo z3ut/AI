@@ -12,19 +12,25 @@ namespace Inventor.Core.Processors
 	[Obsolete("This class will be removed as soon as QuestionDialog supports CheckStatementQuestion. Please, use CheckStatementQuestion with corresponding statement instead.")]
 	public sealed class IsProcessor : QuestionProcessor<IsQuestion, IsStatement>
 	{
-		protected override Boolean DoesStatementMatch(IsStatement statement)
+		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsQuestion> context, IsStatement statement)
 		{
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IEnumerable<IsStatement> statements)
+		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<IsQuestion> context, ICollection<IsStatement> statements)
 		{
 			
 		}
 
-		protected override IAnswer CreateAnswer(ICollection<IsStatement> statements)
+		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsQuestion> context, ICollection<IsStatement> statements)
 		{
 			
+		}
+
+		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<IsQuestion> context)
+		{
+			foreach (context.KnowledgeBase.)
+			yield return 
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<IsQuestion> context)

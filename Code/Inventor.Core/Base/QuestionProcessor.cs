@@ -33,11 +33,11 @@ namespace Inventor.Core.Base
 			}
 
 			var activeContexts = context.GetHierarchy();
-			var statements = context.KnowledgeBase.Statements.Enumerate<StatementT>(activeContexts).Where(statement => DoesStatementMatch(statement)).ToList();
+			var statements = context.KnowledgeBase.Statements.Enumerate<StatementT>(activeContexts).Where(statement => DoesStatementMatch(context, statement)).ToList();
 
-			if (AreEnoughToAnswer(statements))
+			if (AreEnoughToAnswer(context, statements))
 			{
-				return CreateAnswer(statements);
+				return CreateAnswer(context, statements);
 			}
 
 			foreach (var nested in GetNestedQuestions(context))
@@ -58,11 +58,11 @@ namespace Inventor.Core.Base
 			yield break;
 		}
 
-		protected abstract Boolean DoesStatementMatch(StatementT statement);
+		protected abstract Boolean DoesStatementMatch(IQuestionProcessingContext<QuestionT> context, StatementT statement);
 
-		protected abstract Boolean AreEnoughToAnswer(IEnumerable<StatementT> statements);
+		protected abstract Boolean AreEnoughToAnswer(IQuestionProcessingContext<QuestionT> context, ICollection<StatementT> statements);
 
-		protected abstract IAnswer CreateAnswer(ICollection<StatementT> statements);
+		protected abstract IAnswer CreateAnswer(IQuestionProcessingContext<QuestionT> context, ICollection<StatementT> statements);
 
 		protected virtual IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<QuestionT> context)
 		{

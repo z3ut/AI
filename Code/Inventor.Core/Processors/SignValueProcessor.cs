@@ -12,19 +12,26 @@ namespace Inventor.Core.Processors
 {
 	public sealed class SignValueProcessor : QuestionProcessor<SignValueQuestion, SignValueStatement>
 	{
-		protected override Boolean DoesStatementMatch(SignValueStatement statement)
+		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<SignValueQuestion> context, SignValueStatement statement)
 		{
-			
+			return statement.Concept == context.Question.Concept && statement.Sign == context.Question.Sign;
 		}
 
-		protected override Boolean AreEnoughToAnswer(IEnumerable<SignValueStatement> statements)
+		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<SignValueQuestion> context, ICollection<SignValueStatement> statements)
 		{
-			
+			return statements.Count > 0;
 		}
 
-		protected override IAnswer CreateAnswer(ICollection<SignValueStatement> statements)
+		protected override IAnswer CreateAnswer(IQuestionProcessingContext<SignValueQuestion> context, ICollection<SignValueStatement> statements)
 		{
-			
+			var statement = statements.Single();
+			return new ConceptAnswer(statement.Value, description, new Explanation(statement));
+		}
+
+		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<SignValueQuestion> context)
+		{
+			foreach (context.KnowledgeBase.)
+			yield return 
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<SignValueQuestion> context)

@@ -13,19 +13,25 @@ namespace Inventor.Core.Processors
 	[Obsolete("This class will be removed as soon as QuestionDialog supports CheckStatementQuestion. Please, use CheckStatementQuestion with corresponding statement instead.")]
 	public sealed class IsPartOfProcessor : QuestionProcessor<IsPartOfQuestion, HasPartStatement>
 	{
-		protected override Boolean DoesStatementMatch(HasPartStatement statement)
+		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsPartOfQuestion> context, HasPartStatement statement)
 		{
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IEnumerable<HasPartStatement> statements)
+		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<IsPartOfQuestion> context, ICollection<HasPartStatement> statements)
 		{
 			
 		}
 
-		protected override IAnswer CreateAnswer(ICollection<HasPartStatement> statements)
+		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsPartOfQuestion> context, ICollection<HasPartStatement> statements)
 		{
 			
+		}
+
+		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<IsPartOfQuestion> context)
+		{
+			foreach (context.KnowledgeBase.)
+			yield return 
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<IsPartOfQuestion> context)

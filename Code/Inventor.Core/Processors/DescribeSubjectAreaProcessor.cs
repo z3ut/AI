@@ -12,19 +12,25 @@ namespace Inventor.Core.Processors
 {
 	public sealed class DescribeSubjectAreaProcessor : QuestionProcessor<DescribeSubjectAreaQuestion, GroupStatement>
 	{
-		protected override Boolean DoesStatementMatch(GroupStatement statement)
+		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, GroupStatement statement)
 		{
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IEnumerable<GroupStatement> statements)
+		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			
 		}
 
-		protected override IAnswer CreateAnswer(ICollection<GroupStatement> statements)
+		protected override IAnswer CreateAnswer(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			
+		}
+
+		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)
+		{
+			foreach (context.KnowledgeBase.)
+			yield return 
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)

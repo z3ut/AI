@@ -12,19 +12,25 @@ namespace Inventor.Core.Processors
 {
 	public sealed class EnumerateSignsProcessor : QuestionProcessor<EnumerateSignsQuestion, HasSignStatement>
 	{
-		protected override Boolean DoesStatementMatch(HasSignStatement statement)
+		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateSignsQuestion> context, HasSignStatement statement)
 		{
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IEnumerable<HasSignStatement> statements)
+		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<HasSignStatement> statements)
 		{
 			
 		}
 
-		protected override IAnswer CreateAnswer(ICollection<HasSignStatement> statements)
+		protected override IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<HasSignStatement> statements)
 		{
 			
+		}
+
+		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<EnumerateSignsQuestion> context)
+		{
+			foreach (context.KnowledgeBase.)
+			yield return 
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<EnumerateSignsQuestion> context)
