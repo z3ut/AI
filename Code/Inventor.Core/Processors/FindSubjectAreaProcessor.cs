@@ -14,48 +14,24 @@ namespace Inventor.Core.Processors
 	{
 		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<FindSubjectAreaQuestion> context, GroupStatement statement)
 		{
-			
+			return statement.Concept == context.Question.Concept;
 		}
 
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<FindSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
-			
-		}
-
-		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<FindSubjectAreaQuestion> context)
-		{
-			foreach (var  in context.KnowledgeBase.)
+			var result = new FormattedText();
+			foreach (var statement in statements)
 			{
-				yield return ;
-			}
-		}
-
-		public override IAnswer Process(IQuestionProcessingContext<FindSubjectAreaQuestion> context)
-		{
-			var question = context.Question;
-			var activeContexts = context.GetHierarchy();
-
-			var statements = context.KnowledgeBase.Statements.Enumerate<GroupStatement>(activeContexts).Where(c => c.Concept == question.Concept).ToList();
-			if (statements.Any())
-			{
-				var result = new FormattedText();
-				foreach (var statement in statements)
-				{
-					result.Add(() => context.Language.Answers.SubjectArea, new Dictionary<String, INamed>
+				result.Add(() => context.Language.Answers.SubjectArea, new Dictionary<String, INamed>
 					{
-						{ Strings.ParamConcept, question.Concept },
+						{ Strings.ParamConcept, context.Question.Concept },
 						{ Strings.ParamArea, statement.Area },
 					});
-				}
-				return new ConceptsAnswer(
-					statements.Select(s => s.Area).ToList(),
-					result,
-					new Explanation(statements));
 			}
-			else
-			{
-				return Answer.CreateUnknown(context.Language);
-			}
+			return new ConceptsAnswer(
+				statements.Select(s => s.Area).ToList(),
+				result,
+				new Explanation(statements));
 		}
 	}
 }

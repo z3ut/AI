@@ -15,20 +15,21 @@ namespace Inventor.Core.Processors
 	{
 		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsSubjectAreaQuestion> context, GroupStatement statement)
 		{
-			
+			return statement.Area == context.Question.Area && statement.Concept == context.Question.Concept;
 		}
 
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
-			
-		}
-
-		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<IsSubjectAreaQuestion> context)
-		{
-			foreach (var  in context.KnowledgeBase.)
-			{
-				yield return ;
-			}
+			return new BooleanAnswer(
+				statements.Any(),
+				new FormattedText(
+					statements.Any() ? new Func<String>(() => context.Language.Answers.IsSubjectAreaTrue) : () => context.Language.Answers.IsSubjectAreaFalse,
+					new Dictionary<String, INamed>
+					{
+						{ Strings.ParamArea, context.Question.Area },
+						{ Strings.ParamConcept, context.Question.Concept },
+					}),
+				new Explanation(statements));
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<IsSubjectAreaQuestion> context)

@@ -15,34 +15,17 @@ namespace Inventor.Core.Processors
 	{
 		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsPartOfQuestion> context, HasPartStatement statement)
 		{
-			
+			return statement.Whole == context.Question.Parent && statement.Part == context.Question.Child;
 		}
 
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsPartOfQuestion> context, ICollection<HasPartStatement> statements)
 		{
-			
-		}
-
-		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<IsPartOfQuestion> context)
-		{
-			foreach (var  in context.KnowledgeBase.)
-			{
-				yield return ;
-			}
-		}
-
-		public override IAnswer Process(IQuestionProcessingContext<IsPartOfQuestion> context)
-		{
-			var question = context.Question;
-			var activeContexts = context.GetHierarchy();
-
-			var statements = context.KnowledgeBase.Statements.Enumerate<HasPartStatement>(activeContexts).Where(c => c.Whole == question.Parent && c.Part == question.Child).ToList();
 			return new BooleanAnswer(
 				statements.Any(),
 				new FormattedText(statements.Any() ? new Func<String>(() => context.Language.Answers.IsPartOfTrue) : () => context.Language.Answers.IsPartOfFalse, new Dictionary<String, INamed>
 				{
-					{ Strings.ParamParent, question.Parent },
-					{ Strings.ParamChild, question.Child },
+					{ Strings.ParamParent, context.Question.Parent },
+					{ Strings.ParamChild, context.Question.Child },
 				}),
 				new Explanation(statements));
 		}

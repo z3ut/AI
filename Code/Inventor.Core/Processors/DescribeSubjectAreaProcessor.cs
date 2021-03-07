@@ -27,32 +27,5 @@ namespace Inventor.Core.Processors
 				new FormattedText(() => context.Language.Answers.SubjectAreaConcepts + format + ".", parameters),
 				new Explanation(statements));
 		}
-
-		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)
-		{
-			foreach (var  in context.KnowledgeBase.)
-			{
-				yield return ;
-			}
-		}
-
-		public override IAnswer Process(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)
-		{
-			var question = context.Question;
-			var activeContexts = context.GetHierarchy();
-
-			var statements = context.KnowledgeBase.Statements.Enumerate<GroupStatement>(activeContexts).Where(c => c.Area == question.Concept).ToList();
-			if (statements.Any())
-			{
-				return new ConceptsAnswer(
-					statements.Select(s => s.Concept).ToList(),
-					new FormattedText(() => context.Language.Answers.SubjectAreaConcepts + format + ".", parameters),
-					new Explanation(statements));
-			}
-			else
-			{
-				return Answer.CreateUnknown(context.Language);
-			}
-		}
 	}
 }

@@ -14,42 +14,18 @@ namespace Inventor.Core.Processors
 	{
 		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateContainersQuestion> context, HasPartStatement statement)
 		{
-			
+			return statement.Part == context.Question.Concept;
 		}
 
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateContainersQuestion> context, ICollection<HasPartStatement> statements)
 		{
-			
-		}
-
-		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<EnumerateContainersQuestion> context)
-		{
-			foreach (var  in context.KnowledgeBase.)
-			{
-				yield return ;
-			}
-		}
-
-		public override IAnswer Process(IQuestionProcessingContext<EnumerateContainersQuestion> context)
-		{
-			var question = context.Question;
-			var activeContexts = context.GetHierarchy();
-
-			var statements = context.KnowledgeBase.Statements.Enumerate<HasPartStatement>(activeContexts).Where(c => c.Part == question.Concept).ToList();
-			if (statements.Any())
-			{
-				String format;
-				var parameters = statements.Select(r => r.Whole).ToList().Enumerate(out format);
-				parameters.Add(Strings.ParamChild, question.Concept);
-				return new ConceptsAnswer(
-					statements.Select(s => s.Whole).ToList(),
-					new FormattedText(() => context.Language.Answers.EnumerateContainers + format + ".", parameters),
-					new Explanation(statements));
-			}
-			else
-			{
-				return Answer.CreateUnknown(context.Language);
-			}
+			String format;
+			var parameters = statements.Select(r => r.Whole).ToList().Enumerate(out format);
+			parameters.Add(Strings.ParamChild, context.Question.Concept);
+			return new ConceptsAnswer(
+				statements.Select(s => s.Whole).ToList(),
+				new FormattedText(() => context.Language.Answers.EnumerateContainers + format + ".", parameters),
+				new Explanation(statements));
 		}
 	}
 }
