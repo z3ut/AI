@@ -29,8 +29,10 @@ namespace Inventor.Core.Processors
 
 		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<EnumeratePartsQuestion> context)
 		{
-			foreach (context.KnowledgeBase.)
-			yield return 
+			foreach (var  in context.KnowledgeBase.)
+			{
+				yield return ;
+			}
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<EnumeratePartsQuestion> context)

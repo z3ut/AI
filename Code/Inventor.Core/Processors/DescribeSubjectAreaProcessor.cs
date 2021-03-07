@@ -14,23 +14,31 @@ namespace Inventor.Core.Processors
 	{
 		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, GroupStatement statement)
 		{
-			
+			return context.Question.Concept == statement.Area;
 		}
 
 		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
-			
+			return statements.Count > 0;
 		}
 
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
-			
+			String format;
+			var parameters = statements.Select(r => r.Concept).ToList().Enumerate(out format);
+			parameters.Add(Strings.ParamAnswer, context.Question.Concept);
+			return new ConceptsAnswer(
+				statements.Select(s => s.Concept).ToList(),
+				new FormattedText(() => context.Language.Answers.SubjectAreaConcepts + format + ".", parameters),
+				new Explanation(statements));
 		}
 
 		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)
 		{
-			foreach (context.KnowledgeBase.)
-			yield return 
+			foreach (var  in context.KnowledgeBase.)
+			{
+				yield return ;
+			}
 		}
 
 		public override IAnswer Process(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)
@@ -41,9 +49,6 @@ namespace Inventor.Core.Processors
 			var statements = context.KnowledgeBase.Statements.Enumerate<GroupStatement>(activeContexts).Where(c => c.Area == question.Concept).ToList();
 			if (statements.Any())
 			{
-				String format;
-				var parameters = statements.Select(r => r.Concept).ToList().Enumerate(out format);
-				parameters.Add(Strings.ParamAnswer, question.Concept);
 				return new ConceptsAnswer(
 					statements.Select(s => s.Concept).ToList(),
 					new FormattedText(() => context.Language.Answers.SubjectAreaConcepts + format + ".", parameters),
