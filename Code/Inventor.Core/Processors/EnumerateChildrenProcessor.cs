@@ -17,11 +17,6 @@ namespace Inventor.Core.Processors
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<EnumerateChildrenQuestion> context, ICollection<HasPartStatement> statements)
-		{
-			
-		}
-
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateChildrenQuestion> context, ICollection<HasPartStatement> statements)
 		{
 			

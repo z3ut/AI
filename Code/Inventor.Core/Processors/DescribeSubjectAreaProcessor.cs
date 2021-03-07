@@ -17,11 +17,6 @@ namespace Inventor.Core.Processors
 			return context.Question.Concept == statement.Area;
 		}
 
-		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
-		{
-			return statements.Count > 0;
-		}
-
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			String format;

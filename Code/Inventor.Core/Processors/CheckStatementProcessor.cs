@@ -17,11 +17,6 @@ namespace Inventor.Core.Processors
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<CheckStatementQuestion> context, ICollection<StatementT> statements)
-		{
-			
-		}
-
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<CheckStatementQuestion> context, ICollection<StatementT> statements)
 		{
 			

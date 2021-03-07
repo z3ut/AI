@@ -18,11 +18,6 @@ namespace Inventor.Core.Processors
 			
 		}
 
-		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<IsSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
-		{
-			
-		}
-
 		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			
