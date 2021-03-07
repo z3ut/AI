@@ -28,7 +28,7 @@ namespace Inventor.Core.Processors
 				new Explanation(statements));
 		}
 
-		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)
+		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context)
 		{
 			foreach (var  in context.KnowledgeBase.)
 			{

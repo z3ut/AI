@@ -22,7 +22,7 @@ namespace Inventor.Core.Processors
 			
 		}
 
-		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<EnumerateSignsQuestion> context)
+		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<EnumerateSignsQuestion> context)
 		{
 			foreach (var  in context.KnowledgeBase.)
 			{

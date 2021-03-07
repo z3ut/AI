@@ -42,10 +42,10 @@ namespace Inventor.Core.Base
 
 			foreach (var nested in GetNestedQuestions(context))
 			{
-				var answer = nested.Item1.Ask(context);
+				var answer = nested.Question.Ask(context);
 				if (!answer.IsEmpty)
 				{
-					answer.Explanation.Expand(nested.Item2);
+					answer.Explanation.Expand(nested.TransitiveStatements);
 					return answer;
 				}
 			}
@@ -67,9 +67,24 @@ namespace Inventor.Core.Base
 
 		protected abstract IAnswer CreateAnswer(IQuestionProcessingContext<QuestionT> context, ICollection<StatementT> statements);
 
-		protected virtual IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<QuestionT> context)
+		protected virtual IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<QuestionT> context)
 		{
 			yield break;
+		}
+	}
+
+	public class NestedQuestion
+	{
+		public IQuestion Question
+		{ get; }
+
+		public ICollection<IStatement> TransitiveStatements
+		{ get; }
+
+		public NestedQuestion(IQuestion question, ICollection<IStatement> transitiveStatements)
+		{
+			Question = question;
+			TransitiveStatements = transitiveStatements;
 		}
 	}
 }

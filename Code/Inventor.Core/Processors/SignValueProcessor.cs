@@ -28,7 +28,7 @@ namespace Inventor.Core.Processors
 			return new ConceptAnswer(statement.Value, description, new Explanation(statement));
 		}
 
-		protected override IEnumerable<Tuple<IQuestion, ICollection<IStatement>>> GetNestedQuestions(IQuestionProcessingContext<SignValueQuestion> context)
+		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<SignValueQuestion> context)
 		{
 			foreach (var  in context.KnowledgeBase.)
 			{
