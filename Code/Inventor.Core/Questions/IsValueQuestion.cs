@@ -6,8 +6,12 @@ namespace Inventor.Core.Questions
 {
 	public sealed class IsValueQuestion : Question
 	{
+		#region Properties
+
 		public IConcept Concept
 		{ get; }
+
+		#endregion
 
 		public IsValueQuestion(IConcept concept)
 		{

@@ -6,8 +6,12 @@ namespace Inventor.Core.Questions
 {
 	public class IsSignQuestion : Question
 	{
+		#region Properties
+
 		public IConcept Concept
 		{ get; }
+
+		#endregion
 
 		public IsSignQuestion(IConcept concept)
 		{

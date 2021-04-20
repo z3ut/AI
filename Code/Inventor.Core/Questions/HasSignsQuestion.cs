@@ -6,11 +6,15 @@ namespace Inventor.Core.Questions
 {
 	public sealed class HasSignsQuestion : Question
 	{
+		#region Properties
+
 		public IConcept Concept
 		{ get; }
 
 		public Boolean Recursive
 		{ get; }
+
+		#endregion
 
 		public HasSignsQuestion(IConcept concept, Boolean recursive)
 		{

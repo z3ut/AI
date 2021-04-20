@@ -6,8 +6,12 @@ namespace Inventor.Core.Questions
 {
 	public sealed class DescribeSubjectAreaQuestion : Question
 	{
+		#region Properties
+
 		public IConcept Concept
 		{ get; }
+
+		#endregion
 
 		public DescribeSubjectAreaQuestion(IConcept concept)
 		{

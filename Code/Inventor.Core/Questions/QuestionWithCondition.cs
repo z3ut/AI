@@ -7,11 +7,15 @@ namespace Inventor.Core.Questions
 {
 	public sealed class QuestionWithCondition : Question
 	{
+		#region Properties
+
 		public ICollection<IStatement> Conditions
 		{ get; }
 
 		public IQuestion Question
 		{ get; }
+
+		#endregion
 
 		public QuestionWithCondition(IEnumerable<IStatement> conditions, IQuestion question)
 		{

@@ -6,11 +6,15 @@ namespace Inventor.Core.Questions
 {
 	public sealed class SignValueQuestion : Question
 	{
+		#region Properties
+
 		public IConcept Concept
 		{ get; }
 
 		public IConcept Sign
 		{ get; }
+
+		#endregion
 
 		public SignValueQuestion(IConcept concept, IConcept sign)
 		{

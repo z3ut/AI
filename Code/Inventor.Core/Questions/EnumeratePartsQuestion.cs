@@ -6,8 +6,12 @@ namespace Inventor.Core.Questions
 {
 	public sealed class EnumeratePartsQuestion : Question
 	{
+		#region Properties
+
 		public IConcept Concept
 		{ get; }
+
+		#endregion
 
 		public EnumeratePartsQuestion(IConcept concept)
 		{
