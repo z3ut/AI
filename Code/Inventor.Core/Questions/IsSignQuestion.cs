@@ -1,8 +1,10 @@
 ﻿using System;
 
+using Inventor.Core.Base;
+
 namespace Inventor.Core.Questions
 {
-	public class IsSignQuestion : IQuestion
+	public class IsSignQuestion : Question
 	{
 		public IConcept Concept
 		{ get; }

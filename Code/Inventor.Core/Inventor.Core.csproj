@@ -50,6 +50,7 @@
     <Compile Include="Base\Concept.cs" />
     <Compile Include="Base\Explanation.cs" />
     <Compile Include="Base\Context classes.cs" />
+    <Compile Include="Base\Question.cs" />
     <Compile Include="Base\StatementRepository.cs" />
     <Compile Include="Context interfaces.cs" />
     <Compile Include="IAttribute.cs" />

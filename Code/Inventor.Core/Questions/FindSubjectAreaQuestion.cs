@@ -1,8 +1,10 @@
 ﻿using System;
 
+using Inventor.Core.Base;
+
 namespace Inventor.Core.Questions
 {
-	public sealed class FindSubjectAreaQuestion : IQuestion
+	public sealed class FindSubjectAreaQuestion : Question
 	{
 		public IConcept Concept
 		{ get; }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Inventor.Core.Base;
+
 namespace Inventor.Core.Questions
 {
-	public sealed class QuestionWithCondition : IQuestion
+	public sealed class QuestionWithCondition : Question
 	{
 		public ICollection<IStatement> Conditions
 		{ get; }

@@ -1,8 +1,10 @@
 ﻿using System;
 
+using Inventor.Core.Base;
+
 namespace Inventor.Core.Questions
 {
-	public sealed class EnumerateSignsQuestion : IQuestion
+	public sealed class EnumerateSignsQuestion : Question
 	{
 		public IConcept Concept
 		{ get; }

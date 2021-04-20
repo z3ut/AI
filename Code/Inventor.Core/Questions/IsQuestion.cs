@@ -1,8 +1,10 @@
 ﻿using System;
 
+using Inventor.Core.Base;
+
 namespace Inventor.Core.Questions
 {
-	public sealed class IsQuestion : IQuestion
+	public sealed class IsQuestion : Question
 	{
 		public IConcept Child
 		{ get; }

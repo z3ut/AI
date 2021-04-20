@@ -1,8 +1,10 @@
 ﻿using System;
 
+using Inventor.Core.Base;
+
 namespace Inventor.Core.Questions
 {
-	public sealed class CheckStatementQuestion : IQuestion
+	public sealed class CheckStatementQuestion : Question
 	{
 		public IStatement Statement
 		{ get; }
