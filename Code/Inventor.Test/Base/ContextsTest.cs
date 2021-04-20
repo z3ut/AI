@@ -15,22 +15,16 @@ namespace Inventor.Test.Base
 		[Test]
 		public void UnfinishedContextDisposingFails()
 		{
-			bool createNestedContext = false;
-
 			var language = Language.Default;
 			var knowledgeBase = new KnowledgeBase(language);
-			knowledgeBase.Context.QuestionRepository.DefineQuestion(new QuestionDefinition(
-				typeof(TestQuestion),
-				l => string.Empty,
-				() => new TestQuestionProcessorCreateNestedContext(createNestedContext)));
-			var question = new TestQuestion();
 
+			var question = new TestQuestionCreateNestedContext(false);
 			Assert.DoesNotThrow(() =>
 			{
 				question.Ask(knowledgeBase.Context);
 			});
 
-			createNestedContext = true;
+			question = new TestQuestionCreateNestedContext(true);
 			Assert.Throws<InvalidOperationException>(() =>
 			{
 				question.Ask(knowledgeBase.Context);
@@ -42,18 +36,46 @@ namespace Inventor.Test.Base
 		{
 			var language = Language.Default;
 			var knowledgeBase = new KnowledgeBase(language);
-			knowledgeBase.Context.QuestionRepository.DefineQuestion(new QuestionDefinition(
-				typeof(TestQuestion),
-				l => string.Empty,
-				() => new TestQuestionProcessorCreateContextKnowledge()));
 
-			new TestQuestion().Ask(knowledgeBase.Context);
+			new TestQuestionCreateContextKnowledge().Ask(knowledgeBase.Context);
 
 			Assert.IsFalse(knowledgeBase.Statements.Enumerate<TestStatement>().Any());
 		}
 
-		private class TestQuestion : IQuestion
-		{ }
+		private class TestQuestionCreateNestedContext : Question<TestQuestionCreateNestedContext>
+		{
+			private readonly bool _createNestedContext;
+
+			public TestQuestionCreateNestedContext(bool createNestedContext)
+			{
+				_createNestedContext = createNestedContext;
+			}
+
+			protected override IAnswer Process(IQuestionProcessingContext<TestQuestionCreateNestedContext> context)
+			{
+				if (_createNestedContext)
+				{
+					new QuestionProcessingContext<TestQuestionCreateNestedContext>(context, new TestQuestionCreateNestedContext(false));
+				}
+
+				return null;
+			}
+		}
+
+		private class TestQuestionCreateContextKnowledge : Question<TestQuestionCreateContextKnowledge>
+		{
+			protected override IAnswer Process(IQuestionProcessingContext<TestQuestionCreateContextKnowledge> context)
+			{
+				IStatement testStatement;
+				context.KnowledgeBase.Statements.Add(testStatement = new TestStatement());
+				testStatement.Context = context;
+				context.Scope.Add(testStatement);
+
+				Assert.IsTrue(context.KnowledgeBase.Statements.Enumerate<TestStatement>(context).Any());
+
+				return null;
+			}
+		}
 
 		private class TestStatement : IStatement
 		{
@@ -89,41 +111,6 @@ namespace Inventor.Test.Base
 			public Boolean CheckUnique(IEnumerable<IStatement> statements)
 			{
 				throw new NotSupportedException();
-			}
-		}
-
-		private class TestQuestionProcessorCreateNestedContext : QuestionProcessor<TestQuestion>
-		{
-			private readonly bool _createNestedContext;
-
-			public TestQuestionProcessorCreateNestedContext(bool createNestedContext)
-			{
-				_createNestedContext = createNestedContext;
-			}
-
-			public override IAnswer Process(IQuestionProcessingContext<TestQuestion> context)
-			{
-				if (_createNestedContext)
-				{
-					new QuestionProcessingContext<TestQuestion>(context, new TestQuestion());
-				}
-
-				return null;
-			}
-		}
-
-		private class TestQuestionProcessorCreateContextKnowledge : QuestionProcessor<TestQuestion>
-		{
-			public override IAnswer Process(IQuestionProcessingContext<TestQuestion> context)
-			{
-				IStatement testStatement;
-				context.KnowledgeBase.Statements.Add(testStatement = new TestStatement());
-				testStatement.Context = context;
-				context.Scope.Add(testStatement);
-
-				Assert.IsTrue(context.KnowledgeBase.Statements.Enumerate<TestStatement>(context).Any());
-
-				return null;
 			}
 		}
 	}

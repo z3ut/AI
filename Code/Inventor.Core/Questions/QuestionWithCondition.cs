@@ -5,7 +5,7 @@ using Inventor.Core.Base;
 
 namespace Inventor.Core.Questions
 {
-	public sealed class QuestionWithCondition : Question
+	public sealed class QuestionWithCondition : Question<QuestionWithCondition>
 	{
 		#region Properties
 
@@ -24,6 +24,19 @@ namespace Inventor.Core.Questions
 
 			Conditions = new List<IStatement>(conditions);
 			Question = question;
+		}
+
+		protected override IAnswer Process(IQuestionProcessingContext<QuestionWithCondition> context)
+		{
+			return Question.Ask(context);
+		}
+
+		protected override IEnumerable<IStatement> GetPreconditions(IQuestionProcessingContext<QuestionWithCondition> context)
+		{
+			foreach (var precondition in Conditions)
+			{
+				yield return precondition;
+			}
 		}
 	}
 }

@@ -14,15 +14,9 @@ namespace Inventor.Core.Base
 		{
 			QuestionDefinitions = new Dictionary<Type, QuestionDefinition>();
 
-			foreach (var processorType in Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(QuestionProcessor).IsAssignableFrom(t) && !t.IsAbstract))
+			foreach (var questionType in Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(IQuestion).IsAssignableFrom(t) && !t.IsAbstract))
 			{
-				var type = processorType;
-				while (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(QuestionProcessor<>))
-				{
-					type = type.BaseType;
-				}
-				var questionType = type.GetGenericArguments()[0];
-				DefineQuestion(new QuestionDefinition(questionType, processorType));
+				DefineQuestion(new QuestionDefinition(questionType));
 			}
 		}
 
