@@ -72,10 +72,6 @@ namespace Inventor.Core.Localization
 		{ get; set; }
 
 		[XmlElement]
-		public String QuestionWithCondition
-		{ get; set; }
-
-		[XmlElement]
 		public String ParamParent
 		{ get; set; }
 
@@ -107,10 +103,6 @@ namespace Inventor.Core.Localization
 		public String ParamConditions
 		{ get; set; }
 
-		[XmlElement]
-		public String ParamQuestion
-		{ get; set; }
-
 		#endregion
 
 		internal static LanguageQuestionNames CreateDefault()
@@ -133,7 +125,6 @@ namespace Inventor.Core.Localization
 				EnumerateContainersQuestion = "Составной частью чего может являться ПОНЯТИЕ?",
 				IsSubjectAreaQuestion = "Входит ли ПОНЯТИЕ в ПРЕДМЕТНАЯ_ОБЛАСТЬ?",
 				CheckStatementQuestion = "Верно ли, что...",
-				QuestionWithCondition = "При условии...",
 				ParamParent = "РОДИТЕЛЬСКОЕ_ПОНЯТИЕ",
 				ParamChild = "ДОЧЕРНЕЕ_ПОНЯТИЕ",
 				ParamConcept = "ПОНЯТИЕ",
@@ -142,7 +133,6 @@ namespace Inventor.Core.Localization
 				ParamArea = "ПРЕДМЕТНАЯ_ОБЛАСТЬ",
 				ParamStatement = "Утверждение",
 				ParamConditions = "Предусловия",
-				ParamQuestion = "Вопрос",
 			};
 		}
 	}

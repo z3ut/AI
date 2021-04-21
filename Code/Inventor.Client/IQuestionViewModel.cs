@@ -1,7 +1,15 @@
-﻿namespace Inventor.Client
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+using Inventor.Client.ViewModels.Questions;
+
+namespace Inventor.Client
 {
 	public interface IQuestionViewModel
 	{
+		ICollection<StatementViewModel> Conditions
+		{ get; }
+
 		Core.IQuestion BuildQuestion();
 	}
 
@@ -14,11 +22,20 @@
 	public abstract class QuestionViewModel<QuestionT> : IQuestionViewModel<QuestionT>
 		where QuestionT : Core.IQuestion
 	{
+		[PropertyDescriptor(true, "QuestionNames.ParamConditions")]
+		public ICollection<StatementViewModel> Conditions
+		{ get; } = new ObservableCollection<StatementViewModel>();
+
 		public abstract QuestionT BuildQuestion();
 
 		Core.IQuestion IQuestionViewModel.BuildQuestion()
 		{
-			return BuildQuestion();
+			var question = BuildQuestion();
+			foreach (var condition in Conditions)
+			{
+				question.Conditions.Add(condition.CreateStatement());
+			}
+			return question;
 		}
 	}
 }

@@ -75,7 +75,6 @@
     <Compile Include="Localization\LanguageMainForm.cs" />
     <Compile Include="Localization\LanguageQuestionDialog.cs" />
     <Compile Include="IParentChild.cs" />
-    <Compile Include="Questions\QuestionWithCondition.cs" />
     <Compile Include="StatementDefinition.cs" />
     <Compile Include="Statements\ComparisonStatement.cs" />
     <Compile Include="Statements\ProcessesStatement.cs" />

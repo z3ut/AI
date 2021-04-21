@@ -231,9 +231,6 @@ namespace Inventor.Core
 		String CheckStatementQuestion
 		{ get; }
 
-		String QuestionWithCondition
-		{ get; }
-
 		String ParamParent
 		{ get; }
 
@@ -256,9 +253,6 @@ namespace Inventor.Core
 		{ get; }
 
 		String ParamConditions
-		{ get; }
-
-		String ParamQuestion
 		{ get; }
 	}
 

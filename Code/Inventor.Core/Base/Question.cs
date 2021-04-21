@@ -6,6 +6,9 @@ namespace Inventor.Core.Base
 {
 	public abstract class Question : IQuestion
 	{
+		public ICollection<IStatement> Conditions
+		{ get; } = new List<IStatement>();
+
 		public abstract IAnswer Ask(IKnowledgeBaseContext knowledgeBaseContext);
 	}
 
@@ -16,7 +19,7 @@ namespace Inventor.Core.Base
 		{
 			using (var questionContext = (IQuestionProcessingContext<QuestionT>) knowledgeBaseContext.CreateQuestionContext(this))
 			{
-				foreach (var statement in GetPreconditions(questionContext))
+				foreach (var statement in Conditions)
 				{
 					statement.Context = questionContext;
 					questionContext.KnowledgeBase.Statements.Add(statement);
@@ -27,11 +30,6 @@ namespace Inventor.Core.Base
 		}
 
 		protected abstract IAnswer Process(IQuestionProcessingContext<QuestionT> context);
-
-		protected virtual IEnumerable<IStatement> GetPreconditions(IQuestionProcessingContext<QuestionT> context)
-		{
-			yield break;
-		}
 	}
 
 	public abstract class Question<QuestionT, StatementT> : Question<QuestionT>

@@ -57,7 +57,6 @@ namespace Inventor.Client.Dialogs
 				{ typeof(bool), createCheckBox },
 				{ typeof(StatementViewModel), createStatementEditor },
 				{ typeof(ICollection<StatementViewModel>), createStatementsList },
-				{ typeof(IQuestionViewModel), createQuestionEditor },
 			};
 		}
 
@@ -324,59 +323,6 @@ namespace Inventor.Client.Dialogs
 			dockPanel.Children.Add(listBox);
 
 			groupBox.Content = dockPanel;
-		}
-
-		private void createQuestionEditor(PropertyDescriptorAttribute propertyDescriptor, PropertyInfo propertyInfo, int gridRow)
-		{
-			Button editButton;
-			panelQuestionParams.Children.Add(editButton = new Button
-			{
-				Margin = new Thickness(2),
-				Content = $"{_language.QuestionNames.ParamQuestion}: ...",
-				DataContext = Question,
-			});
-			editButton.SetBinding(FrameworkElement.TagProperty, new Binding
-			{
-				Path = new PropertyPath(propertyInfo.Name),
-				Mode = BindingMode.TwoWay,
-			});
-			editButton.SetValue(Grid.RowProperty, gridRow);
-			editButton.SetValue(Grid.ColumnProperty, 0);
-			editButton.SetValue(Grid.ColumnSpanProperty, 2);
-			editButton.Click += (sender, args) =>
-			{
-				var question = editButton.Tag as IQuestionViewModel;
-				if (question == null || MessageBox.Show(_language.Ui.CreateNewQuestion, _language.Common.Question, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-				{
-					var dialog = new QuestionDialog(_knowledgeBase, _language)
-					{
-						Owner = this,
-					};
-					if (dialog.ShowDialog() == true)
-					{
-						question = dialog.Question;
-					}
-				}
-				else
-				{
-					var dialog = new QuestionDialog(_knowledgeBase, _language)
-					{
-						Owner = this,
-					};
-					dialog.beginEditQuestion(question);
-					if (dialog.ShowDialog() != true)
-					{
-						question = null;
-					}
-				}
-
-				if (question != null)
-				{
-					editButton.Tag = question;
-					var questionDefinition = _knowledgeBase.Context.QuestionRepository.QuestionDefinitions[question.BuildQuestion().GetType()];
-					editButton.Content = $"{_language.QuestionNames.ParamQuestion}: {questionDefinition.GetName(_language)}";
-				}
-			};
 		}
 
 		#endregion
