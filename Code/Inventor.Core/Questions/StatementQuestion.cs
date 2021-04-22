@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Inventor.Core.Answers;
 using Inventor.Core.Base;
+using Inventor.Core.Localization;
 
 namespace Inventor.Core.Questions
 {
@@ -97,7 +99,32 @@ namespace Inventor.Core.Questions
 			}
 			else
 			{
-				return Answers.Answer.CreateUnknown(context.Language);
+				return Answer.CreateUnknown(context.Language);
+			}
+		}
+
+		protected static IAnswer CreateCommonConceptsAnswer(
+			IQuestionProcessingContext<QuestionT> context,
+			ICollection<StatementT> statements,
+			Func<StatementT, IConcept> statementConceptSelector,
+			Func<QuestionT, IConcept> questionConceptSelector,
+			Func<ILanguageAnswers, String> answerFormatSelector)
+		{
+			if (statements.Any())
+			{
+				var concepts = statements.Select(statementConceptSelector).ToList();
+
+				String format;
+				var parameters = concepts.Enumerate(out format);
+				parameters.Add(Strings.ParamAnswer, questionConceptSelector(context.Question));
+				return new ConceptsAnswer(
+					concepts,
+					new FormattedText(() => answerFormatSelector(context.Language.Answers) + format + ".", parameters),
+					new Explanation(statements.OfType<IStatement>()));
+			}
+			else
+			{
+				return Answer.CreateUnknown(context.Language);
 			}
 		}
 	}

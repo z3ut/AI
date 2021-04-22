@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-using Inventor.Core.Answers;
-using Inventor.Core.Base;
-using Inventor.Core.Localization;
 using Inventor.Core.Statements;
 
 namespace Inventor.Core.Questions
@@ -28,22 +24,12 @@ namespace Inventor.Core.Questions
 
 		private static IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateChildrenQuestion> context, ICollection<IsStatement> statements)
 		{
-			if (statements.Any())
-			{
-				var concepts = statements.Select(r => r.Descendant).ToList();
-
-				String format;
-				var parameters = concepts.Enumerate(out format);
-				parameters.Add(Strings.ParamParent, context.Question.Concept);
-				return new ConceptsAnswer(
-					concepts,
-					new FormattedText(() => context.Language.Answers.Enumerate + format + ".", parameters),
-					new Explanation(statements));
-			}
-			else
-			{
-				return Answer.CreateUnknown(context.Language);
-			}
+			return CreateCommonConceptsAnswer(
+				context,
+				statements,
+				r => r.Descendant,
+				q => q.Concept,
+				a => a.Enumerate);
 		}
 
 		private static Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateChildrenQuestion> context, IsStatement statement)
