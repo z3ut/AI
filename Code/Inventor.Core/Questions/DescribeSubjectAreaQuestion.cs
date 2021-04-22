@@ -30,11 +30,13 @@ namespace Inventor.Core.Questions
 		{
 			if (statements.Any())
 			{
+				var concepts = statements.Select(r => r.Concept).ToList();
+
 				String format;
-				var parameters = statements.Select(r => r.Concept).ToList().Enumerate(out format);
+				var parameters = concepts.Enumerate(out format);
 				parameters.Add(Strings.ParamAnswer, context.Question.Concept);
 				return new ConceptsAnswer(
-					statements.Select(s => s.Concept).ToList(),
+					concepts,
 					new FormattedText(() => context.Language.Answers.SubjectAreaConcepts + format + ".", parameters),
 					new Explanation(statements));
 			}
