@@ -23,6 +23,7 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public IsPartOfQuestion(IConcept child, IConcept parent)
+			: base(DoesStatementMatch, CreateAnswer)
 		{
 			if (child == null) throw new ArgumentNullException(nameof(child));
 			if (parent == null) throw new ArgumentNullException(nameof(parent));
@@ -31,21 +32,21 @@ namespace Inventor.Core.Questions
 			Parent = parent;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsPartOfQuestion> context, ICollection<HasPartStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsPartOfQuestion> context, ICollection<HasPartStatement> statements)
 		{
 			return new BooleanAnswer(
 				statements.Any(),
 				new FormattedText(statements.Any() ? new Func<String>(() => context.Language.Answers.IsPartOfTrue) : () => context.Language.Answers.IsPartOfFalse, new Dictionary<String, INamed>
 				{
-					{ Strings.ParamParent, Parent },
-					{ Strings.ParamChild, Child },
+					{ Strings.ParamParent, context.Question.Parent },
+					{ Strings.ParamChild, context.Question.Child },
 				}),
 				new Explanation(statements));
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsPartOfQuestion> context, HasPartStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsPartOfQuestion> context, HasPartStatement statement)
 		{
-			return statement.Whole == Parent && statement.Part == Child;
+			return statement.Whole == context.Question.Parent && statement.Part == context.Question.Child;
 		}
 	}
 }

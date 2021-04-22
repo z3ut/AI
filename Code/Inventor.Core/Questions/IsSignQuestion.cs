@@ -19,29 +19,30 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public IsSignQuestion(IConcept concept)
+			: base(DoesStatementMatch, CreateAnswer)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 
 			Concept = concept;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsSignQuestion> context, ICollection<HasSignStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsSignQuestion> context, ICollection<HasSignStatement> statements)
 		{
-			bool isSign = Concept.HasAttribute<IsSignAttribute>();
+			bool isSign = context.Question.Concept.HasAttribute<IsSignAttribute>();
 			return new BooleanAnswer(
 				isSign,
 				new FormattedText(
 					isSign ? new Func<String>(() => context.Language.Answers.SignTrue) : () => context.Language.Answers.SignFalse,
 					new Dictionary<String, INamed>
 					{
-						{ Strings.ParamConcept, Concept },
+						{ Strings.ParamConcept, context.Question.Concept },
 					}),
 				new Explanation(statements));
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsSignQuestion> context, HasSignStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsSignQuestion> context, HasSignStatement statement)
 		{
-			return statement.Sign == Concept;
+			return statement.Sign == context.Question.Concept;
 		}
 	}
 }

@@ -23,6 +23,7 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public IsSubjectAreaQuestion(IConcept concept, IConcept area)
+			: base(DoesStatementMatch, CreateAnswer)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 			if (area == null) throw new ArgumentNullException(nameof(area));
@@ -31,7 +32,7 @@ namespace Inventor.Core.Questions
 			Area = area;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			return new BooleanAnswer(
 				statements.Any(),
@@ -39,15 +40,15 @@ namespace Inventor.Core.Questions
 					statements.Any() ? new Func<String>(() => context.Language.Answers.IsSubjectAreaTrue) : () => context.Language.Answers.IsSubjectAreaFalse,
 					new Dictionary<String, INamed>
 					{
-						{ Strings.ParamArea, Area },
-						{ Strings.ParamConcept, Concept },
+						{ Strings.ParamArea, context.Question.Area },
+						{ Strings.ParamConcept, context.Question.Concept },
 					}),
 				new Explanation(statements));
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsSubjectAreaQuestion> context, GroupStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsSubjectAreaQuestion> context, GroupStatement statement)
 		{
-			return statement.Area == Area && statement.Concept == Concept;
+			return statement.Area == context.Question.Area && statement.Concept == context.Question.Concept;
 		}
 	}
 }

@@ -19,19 +19,20 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public EnumerateContainersQuestion(IConcept concept)
+			: base(DoesStatementMatch, CreateAnswer)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 
 			Concept = concept;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateContainersQuestion> context, ICollection<HasPartStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateContainersQuestion> context, ICollection<HasPartStatement> statements)
 		{
 			if (statements.Any())
 			{
 				String format;
 				var parameters = statements.Select(r => r.Whole).ToList().Enumerate(out format);
-				parameters.Add(Strings.ParamChild, Concept);
+				parameters.Add(Strings.ParamChild, context.Question.Concept);
 				return new ConceptsAnswer(
 					statements.Select(s => s.Whole).ToList(),
 					new FormattedText(() => context.Language.Answers.EnumerateContainers + format + ".", parameters),
@@ -43,9 +44,9 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateContainersQuestion> context, HasPartStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateContainersQuestion> context, HasPartStatement statement)
 		{
-			return statement.Part == Concept;
+			return statement.Part == context.Question.Concept;
 		}
 	}
 }

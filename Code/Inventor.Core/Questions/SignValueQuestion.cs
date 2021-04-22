@@ -22,6 +22,7 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public SignValueQuestion(IConcept concept, IConcept sign)
+			: base(DoesStatementMatch, CreateAnswer, getNestedQuestions: GetNestedQuestions)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 			if (sign == null) throw new ArgumentNullException(nameof(sign));
@@ -30,14 +31,14 @@ namespace Inventor.Core.Questions
 			Sign = sign;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<SignValueQuestion> context, ICollection<SignValueStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<SignValueQuestion> context, ICollection<SignValueStatement> statements)
 		{
 			if (statements.Any())
 			{
 				var statement = statements.First();
 				return new ConceptAnswer(
 					statement.Value,
-					formatSignValue(statement, Concept, context.Language),
+					formatSignValue(statement, context.Question.Concept, context.Language),
 					new Explanation(statements));
 			}
 			else
@@ -46,23 +47,23 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<SignValueQuestion> context, SignValueStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<SignValueQuestion> context, SignValueStatement statement)
 		{
-			return statement.Concept == Concept && statement.Sign == Sign;
+			return statement.Concept == context.Question.Concept && statement.Sign == context.Question.Sign;
 		}
 
-		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<SignValueQuestion> context)
+		private static IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<SignValueQuestion> context)
 		{
 			var alreadyViewedConcepts = new HashSet<IConcept>(context.ActiveContexts.OfType<IQuestionProcessingContext<SignValueQuestion>>().Select(questionContext => questionContext.Question.Concept));
 
-			var transitiveStatements = context.KnowledgeBase.Statements.Enumerate<IsStatement>(context.ActiveContexts).Where(isStatement => isStatement.Child == Concept);
+			var transitiveStatements = context.KnowledgeBase.Statements.Enumerate<IsStatement>(context.ActiveContexts).Where(isStatement => isStatement.Child == context.Question.Concept);
 
 			foreach (var transitiveStatement in transitiveStatements)
 			{
 				var parent = transitiveStatement.Parent;
 				if (!alreadyViewedConcepts.Contains(parent))
 				{
-					yield return new NestedQuestion(new SignValueQuestion(parent, Sign), new IStatement[] { transitiveStatement });
+					yield return new NestedQuestion(new SignValueQuestion(parent, context.Question.Sign), new IStatement[] { transitiveStatement });
 				}
 			}
 		}

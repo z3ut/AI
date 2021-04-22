@@ -19,29 +19,30 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public IsValueQuestion(IConcept concept)
+			: base(DoesStatementMatch, CreateAnswer)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 
 			Concept = concept;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsValueQuestion> context, ICollection<SignValueStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsValueQuestion> context, ICollection<SignValueStatement> statements)
 		{
-			bool isValue = Concept.HasAttribute<IsValueAttribute>();
+			bool isValue = context.Question.Concept.HasAttribute<IsValueAttribute>();
 			return new BooleanAnswer(
 				isValue,
 				new FormattedText(
 					isValue ? new Func<String>(() => context.Language.Answers.ValueTrue) : () => context.Language.Answers.ValueFalse,
 					new Dictionary<String, INamed>
 					{
-						{ Strings.ParamConcept, Concept },
+						{ Strings.ParamConcept, context.Question.Concept },
 					}),
 				new Explanation(statements));
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsValueQuestion> context, SignValueStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsValueQuestion> context, SignValueStatement statement)
 		{
-			return statement.Value == Concept;
+			return statement.Value == context.Question.Concept;
 		}
 	}
 }

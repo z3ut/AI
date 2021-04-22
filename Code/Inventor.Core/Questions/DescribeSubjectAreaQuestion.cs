@@ -19,19 +19,20 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public DescribeSubjectAreaQuestion(IConcept concept)
+			: base(DoesStatementMatch, CreateAnswer)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 
 			Concept = concept;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			if (statements.Any())
 			{
 				String format;
 				var parameters = statements.Select(r => r.Concept).ToList().Enumerate(out format);
-				parameters.Add(Strings.ParamAnswer, Concept);
+				parameters.Add(Strings.ParamAnswer, context.Question.Concept);
 				return new ConceptsAnswer(
 					statements.Select(s => s.Concept).ToList(),
 					new FormattedText(() => context.Language.Answers.SubjectAreaConcepts + format + ".", parameters),
@@ -43,9 +44,9 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, GroupStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<DescribeSubjectAreaQuestion> context, GroupStatement statement)
 		{
-			return statement.Area == Concept;
+			return statement.Area == context.Question.Concept;
 		}
 	}
 }

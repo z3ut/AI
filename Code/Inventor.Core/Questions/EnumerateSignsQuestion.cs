@@ -22,6 +22,7 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public EnumerateSignsQuestion(IConcept concept, Boolean recursive)
+			: base(DoesStatementMatch, CreateAnswer, AreEnoughToAnswer, GetNestedQuestions, ProcessChildAnswers)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 
@@ -29,7 +30,7 @@ namespace Inventor.Core.Questions
 			Recursive = recursive;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<HasSignStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<HasSignStatement> statements)
 		{
 			if (statements.Any())
 			{
@@ -41,23 +42,23 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateSignsQuestion> context, HasSignStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateSignsQuestion> context, HasSignStatement statement)
 		{
-			return statement.Concept == Concept;
+			return statement.Concept == context.Question.Concept;
 		}
 
-		protected override Boolean AreEnoughToAnswer(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<HasSignStatement> statements)
+		private static Boolean AreEnoughToAnswer(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<HasSignStatement> statements)
 		{
-			return !Recursive;
+			return !context.Question.Recursive;
 		}
 
-		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<EnumerateSignsQuestion> context)
+		private static IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<EnumerateSignsQuestion> context)
 		{
-			if (!Recursive) yield break;
+			if (!context.Question.Recursive) yield break;
 
 			var alreadyViewedConcepts = new HashSet<IConcept>(context.ActiveContexts.OfType<IQuestionProcessingContext<EnumerateSignsQuestion>>().Select(questionContext => questionContext.Question.Concept));
 
-			var transitiveStatements = context.KnowledgeBase.Statements.Enumerate<IsStatement>(context.ActiveContexts).Where(isStatement => isStatement.Child == Concept);
+			var transitiveStatements = context.KnowledgeBase.Statements.Enumerate<IsStatement>(context.ActiveContexts).Where(isStatement => isStatement.Child == context.Question.Concept);
 
 			foreach (var transitiveStatement in transitiveStatements)
 			{
@@ -69,7 +70,7 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected override IAnswer ProcessChildAnswers(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<HasSignStatement> statements, IDictionary<IAnswer, ICollection<IStatement>> answers)
+		private static IAnswer ProcessChildAnswers(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<HasSignStatement> statements, IDictionary<IAnswer, ICollection<IStatement>> answers)
 		{
 			var allSigns = new HashSet<IConcept>();
 			var allStatements = new HashSet<IStatement>();
@@ -105,15 +106,15 @@ namespace Inventor.Core.Questions
 				: Answer.CreateUnknown(context.Language);
 		}
 
-		private IAnswer formatAnswer(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<IConcept> signs, ICollection<IStatement> statements)
+		private static IAnswer formatAnswer(IQuestionProcessingContext<EnumerateSignsQuestion> context, ICollection<IConcept> signs, ICollection<IStatement> statements)
 		{
 			String format;
 			var parameters = signs.Enumerate(out format);
-			parameters[Strings.ParamConcept] = Concept;
+			parameters[Strings.ParamConcept] = context.Question.Concept;
 			return new ConceptsAnswer(
 				signs,
 				new FormattedText(
-					() => string.Format(context.Language.Answers.ConceptSigns, Recursive ? context.Language.Answers.RecursiveTrue : context.Language.Answers.RecursiveFalse, format),
+					() => string.Format(context.Language.Answers.ConceptSigns, context.Question.Recursive ? context.Language.Answers.RecursiveTrue : context.Language.Answers.RecursiveFalse, format),
 					parameters),
 				new Explanation(statements));
 		}

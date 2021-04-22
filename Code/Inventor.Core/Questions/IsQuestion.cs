@@ -23,6 +23,7 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public IsQuestion(IConcept child, IConcept parent)
+			: base(DoesStatementMatch, CreateAnswer, getNestedQuestions: GetNestedQuestions)
 		{
 			if (child == null) throw new ArgumentNullException(nameof(child));
 			if (parent == null) throw new ArgumentNullException(nameof(parent));
@@ -31,7 +32,7 @@ namespace Inventor.Core.Questions
 			Parent = parent;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<IsQuestion> context, ICollection<IsStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsQuestion> context, ICollection<IsStatement> statements)
 		{
 			Boolean yes = statements.Any();
 			return new BooleanAnswer(
@@ -40,29 +41,29 @@ namespace Inventor.Core.Questions
 					yes ? new Func<String>(() => context.Language.Answers.IsTrue) : () => context.Language.Answers.IsFalse,
 					new Dictionary<String, INamed>
 					{
-						{ Strings.ParamParent, Child },
-						{ Strings.ParamChild, Parent },
+						{ Strings.ParamParent, context.Question.Child },
+						{ Strings.ParamChild, context.Question.Parent },
 					}),
 				new Explanation(statements));
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<IsQuestion> context, IsStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsQuestion> context, IsStatement statement)
 		{
-			return statement.Parent == Parent && statement.Child == Child;
+			return statement.Parent == context.Question.Parent && statement.Child == context.Question.Child;
 		}
 
-		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<IsQuestion> context)
+		private static IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<IsQuestion> context)
 		{
 			var alreadyViewedConcepts = new HashSet<IConcept>(context.ActiveContexts.OfType<IQuestionProcessingContext<IsQuestion>>().Select(questionContext => questionContext.Question.Child));
 
-			var transitiveStatements = context.KnowledgeBase.Statements.Enumerate<IsStatement>(context.ActiveContexts).Where(isStatement => isStatement.Child == Child);
+			var transitiveStatements = context.KnowledgeBase.Statements.Enumerate<IsStatement>(context.ActiveContexts).Where(isStatement => isStatement.Child == context.Question.Child);
 
 			foreach (var transitiveStatement in transitiveStatements)
 			{
 				var parent = transitiveStatement.Parent;
 				if (!alreadyViewedConcepts.Contains(parent))
 				{
-					yield return new NestedQuestion(new IsQuestion(parent, Parent), new IStatement[] { transitiveStatement });
+					yield return new NestedQuestion(new IsQuestion(parent, context.Question.Parent), new IStatement[] { transitiveStatement });
 				}
 			}
 		}

@@ -19,19 +19,20 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public EnumerateChildrenQuestion(IConcept concept)
+			: base(DoesStatementMatch, CreateAnswer)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 
 			Concept = concept;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateChildrenQuestion> context, ICollection<IsStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<EnumerateChildrenQuestion> context, ICollection<IsStatement> statements)
 		{
 			if (statements.Any())
 			{
 				String format;
 				var parameters = statements.Select(r => r.Descendant).ToList().Enumerate(out format);
-				parameters.Add(Strings.ParamParent, Concept);
+				parameters.Add(Strings.ParamParent, context.Question.Concept);
 				return new ConceptsAnswer(
 					statements.Select(s => s.Descendant).ToList(),
 					new FormattedText(() => context.Language.Answers.Enumerate + format + ".", parameters),
@@ -43,9 +44,9 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateChildrenQuestion> context, IsStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<EnumerateChildrenQuestion> context, IsStatement statement)
 		{
-			return statement.Ancestor == Concept;
+			return statement.Ancestor == context.Question.Concept;
 		}
 	}
 }

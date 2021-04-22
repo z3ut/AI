@@ -19,13 +19,14 @@ namespace Inventor.Core.Questions
 		#endregion
 
 		public FindSubjectAreaQuestion(IConcept concept)
+			: base(DoesStatementMatch, CreateAnswer)
 		{
 			if (concept == null) throw new ArgumentNullException(nameof(concept));
 
 			Concept = concept;
 		}
 
-		protected override IAnswer CreateAnswer(IQuestionProcessingContext<FindSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
+		private static IAnswer CreateAnswer(IQuestionProcessingContext<FindSubjectAreaQuestion> context, ICollection<GroupStatement> statements)
 		{
 			if (statements.Any())
 			{
@@ -34,7 +35,7 @@ namespace Inventor.Core.Questions
 				{
 					result.Add(() => context.Language.Answers.SubjectArea, new Dictionary<String, INamed>
 					{
-						{ Strings.ParamConcept, Concept },
+						{ Strings.ParamConcept, context.Question.Concept },
 						{ Strings.ParamArea, statement.Area },
 					});
 				}
@@ -49,9 +50,9 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected override Boolean DoesStatementMatch(IQuestionProcessingContext<FindSubjectAreaQuestion> context, GroupStatement statement)
+		private static Boolean DoesStatementMatch(IQuestionProcessingContext<FindSubjectAreaQuestion> context, GroupStatement statement)
 		{
-			return statement.Concept == Concept;
+			return statement.Concept == context.Question.Concept;
 		}
 	}
 }
