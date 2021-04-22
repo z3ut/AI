@@ -9,7 +9,7 @@ using Inventor.Core.Statements;
 
 namespace Inventor.Core.Questions
 {
-	public sealed class DescribeSubjectAreaQuestion : Question<DescribeSubjectAreaQuestion, GroupStatement>
+	public sealed class DescribeSubjectAreaQuestion : StatementQuestion<DescribeSubjectAreaQuestion, GroupStatement>
 	{
 		#region Properties
 
