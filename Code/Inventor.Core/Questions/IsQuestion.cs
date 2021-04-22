@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Inventor.Core.Answers;
-using Inventor.Core.Base;
 using Inventor.Core.Localization;
 using Inventor.Core.Statements;
 
@@ -34,17 +32,17 @@ namespace Inventor.Core.Questions
 
 		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsQuestion> context, ICollection<IsStatement> statements)
 		{
-			Boolean yes = statements.Any();
-			return new BooleanAnswer(
-				yes,
-				new FormattedText(
-					yes ? new Func<String>(() => context.Language.Answers.IsTrue) : () => context.Language.Answers.IsFalse,
-					new Dictionary<String, INamed>
-					{
-						{ Strings.ParamParent, context.Question.Child },
-						{ Strings.ParamChild, context.Question.Parent },
-					}),
-				new Explanation(statements));
+			return CreateCommonBooleanAnswer(
+				context,
+				statements,
+				statements.Any(),
+				a => a.IsTrue,
+				a => a.IsFalse,
+				q => new Dictionary<String, INamed>
+				{
+					{ Strings.ParamParent, context.Question.Child },
+					{ Strings.ParamChild, context.Question.Parent },
+				});
 		}
 
 		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsQuestion> context, IsStatement statement)

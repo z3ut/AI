@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Inventor.Core.Answers;
-using Inventor.Core.Base;
 using Inventor.Core.Localization;
 using Inventor.Core.Statements;
 
@@ -34,14 +32,17 @@ namespace Inventor.Core.Questions
 
 		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsPartOfQuestion> context, ICollection<HasPartStatement> statements)
 		{
-			return new BooleanAnswer(
+			return CreateCommonBooleanAnswer(
+				context,
+				statements,
 				statements.Any(),
-				new FormattedText(statements.Any() ? new Func<String>(() => context.Language.Answers.IsPartOfTrue) : () => context.Language.Answers.IsPartOfFalse, new Dictionary<String, INamed>
+				a => a.IsPartOfTrue,
+				a => a.IsPartOfFalse,
+				q => new Dictionary<String, INamed>
 				{
 					{ Strings.ParamParent, context.Question.Parent },
 					{ Strings.ParamChild, context.Question.Child },
-				}),
-				new Explanation(statements));
+				});
 		}
 
 		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsPartOfQuestion> context, HasPartStatement statement)

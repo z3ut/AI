@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Inventor.Core.Answers;
 using Inventor.Core.Attributes;
-using Inventor.Core.Base;
 using Inventor.Core.Localization;
 using Inventor.Core.Statements;
 
@@ -28,16 +26,16 @@ namespace Inventor.Core.Questions
 
 		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsValueQuestion> context, ICollection<SignValueStatement> statements)
 		{
-			bool isValue = context.Question.Concept.HasAttribute<IsValueAttribute>();
-			return new BooleanAnswer(
-				isValue,
-				new FormattedText(
-					isValue ? new Func<String>(() => context.Language.Answers.ValueTrue) : () => context.Language.Answers.ValueFalse,
-					new Dictionary<String, INamed>
-					{
-						{ Strings.ParamConcept, context.Question.Concept },
-					}),
-				new Explanation(statements));
+			return CreateCommonBooleanAnswer(
+				context,
+				statements,
+				context.Question.Concept.HasAttribute<IsValueAttribute>(),
+				a => a.ValueTrue,
+				a => a.ValueFalse,
+				q => new Dictionary<String, INamed>
+				{
+					{ Strings.ParamConcept, context.Question.Concept },
+				});
 		}
 
 		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsValueQuestion> context, SignValueStatement statement)

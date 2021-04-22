@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Inventor.Core.Answers;
-using Inventor.Core.Base;
 using Inventor.Core.Localization;
 using Inventor.Core.Statements;
 
@@ -37,16 +35,17 @@ namespace Inventor.Core.Questions
 
 		private static IAnswer CreateAnswer(IQuestionProcessingContext<HasSignQuestion> context, ICollection<HasSignStatement> statements)
 		{
-			return new BooleanAnswer(
+			return CreateCommonBooleanAnswer(
+				context,
+				statements,
 				statements.Any(),
-				new FormattedText(
-					() => String.Format(statements.Any() ? context.Language.Answers.HasSignTrue : context.Language.Answers.HasSignFalse, context.Question.Recursive ? context.Language.Answers.RecursiveTrue : context.Language.Answers.RecursiveFalse),
-					new Dictionary<String, INamed>
-					{
-						{ Strings.ParamConcept, context.Question.Concept },
-						{ Strings.ParamSign, context.Question.Sign },
-					}),
-				new Explanation(statements));
+				a => String.Format(a.HasSignTrue, context.Question.Recursive ? a.RecursiveTrue : a.RecursiveFalse),
+				a => String.Format(a.HasSignFalse, context.Question.Recursive ? a.RecursiveTrue : a.RecursiveFalse),
+				q => new Dictionary<String, INamed>
+				{
+					{ Strings.ParamConcept, context.Question.Concept },
+					{ Strings.ParamSign, context.Question.Sign },
+				});
 		}
 
 		private static Boolean DoesStatementMatch(IQuestionProcessingContext<HasSignQuestion> context, HasSignStatement statement)

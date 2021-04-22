@@ -127,6 +127,22 @@ namespace Inventor.Core.Questions
 				return Answer.CreateUnknown(context.Language);
 			}
 		}
+
+		protected static IAnswer CreateCommonBooleanAnswer(
+			IQuestionProcessingContext<QuestionT> context,
+			ICollection<StatementT> statements,
+			Boolean success,
+			Func<ILanguageAnswers, String> trueAnswerFormatSelector,
+			Func<ILanguageAnswers, String> falseAnswerFormatSelector,
+			Func<QuestionT, Dictionary<String, INamed>> questionConceptsSelector)
+		{
+			return new BooleanAnswer(
+				success,
+				new FormattedText(
+					success ? new Func<String>(() => trueAnswerFormatSelector(context.Language.Answers)) : () => falseAnswerFormatSelector(context.Language.Answers),
+					questionConceptsSelector(context.Question)),
+				new Explanation(statements.OfType<IStatement>()));
+		}
 	}
 
 	public class NestedQuestion
