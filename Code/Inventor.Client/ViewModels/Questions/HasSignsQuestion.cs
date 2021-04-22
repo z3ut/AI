@@ -1,7 +1,7 @@
 ﻿namespace Inventor.Client.ViewModels.Questions
 {
 	[QuestionDescriptor]
-	public sealed class HasSignsQuestion : QuestionViewModel<Core.Questions.HasSignsQuestion>
+	public sealed class HasSignsQuestion : QuestionViewModel<Core.Questions.StatementQuestion<Core.Statements.HasSignStatement>>
 	{
 		[PropertyDescriptor(true, "QuestionNames.ParamConcept")]
 		public Core.IConcept Concept
@@ -11,9 +11,9 @@
 		public bool Recursive
 		{ get; set; }
 
-		public override Core.Questions.HasSignsQuestion BuildQuestion()
+		public override Core.Questions.StatementQuestion<Core.Statements.HasSignStatement> BuildQuestion()
 		{
-			return new Core.Questions.HasSignsQuestion(Concept, Recursive);
+			return new Core.Questions.StatementQuestion<Core.Statements.HasSignStatement>(Concept, Recursive);
 		}
 	}
 }

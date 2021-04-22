@@ -9,15 +9,15 @@ using Inventor.Core.Localization;
 namespace Inventor.Core.Questions
 {
 	public delegate Boolean DoesStatementMatchDelegate<in QuestionT, in StatementT>(IQuestionProcessingContext<QuestionT> context, StatementT statement)
-		where QuestionT : StatementQuestion<QuestionT, StatementT>
+		where QuestionT : StatementQuestion<StatementT>
 		where StatementT : IStatement;
 
 	public delegate Boolean AreEnoughToAnswerDelegate<in QuestionT, StatementT>(IQuestionProcessingContext<QuestionT> context, ICollection<StatementT> statements)
-		where QuestionT : StatementQuestion<QuestionT, StatementT>
+		where QuestionT : StatementQuestion<StatementT>
 		where StatementT : IStatement;
 
 	public delegate IAnswer CreateAnswerDelegate<in QuestionT, StatementT>(IQuestionProcessingContext<QuestionT> context, ICollection<StatementT> statements)
-		where QuestionT : StatementQuestion<QuestionT, StatementT>
+		where QuestionT : StatementQuestion<StatementT>
 		where StatementT : IStatement;
 
 	public delegate IEnumerable<NestedQuestion> GetNestedQuestionsDelegate<in QuestionT>(IQuestionProcessingContext<QuestionT> context)
@@ -27,25 +27,24 @@ namespace Inventor.Core.Questions
 		IQuestionProcessingContext<QuestionT> context,
 		ICollection<StatementT> statements,
 		IDictionary<IAnswer, ICollection<IStatement>> childAnswers)
-		where QuestionT : StatementQuestion<QuestionT, StatementT>
+		where QuestionT : StatementQuestion<StatementT>
 		where StatementT : IStatement;
 
-	public class StatementQuestion<QuestionT, StatementT> : Question<QuestionT>
-		where QuestionT : StatementQuestion<QuestionT, StatementT>
+	public class StatementQuestion<StatementT> : Question<StatementQuestion<StatementT>>
 		where StatementT : IStatement
 	{
-		private readonly DoesStatementMatchDelegate<QuestionT, StatementT> _doesStatementMatch;
-		private readonly AreEnoughToAnswerDelegate<QuestionT, StatementT> _areEnoughToAnswer;
-		private readonly CreateAnswerDelegate<QuestionT, StatementT> _createAnswer;
-		private readonly GetNestedQuestionsDelegate<QuestionT> _getNestedQuestions;
-		private readonly ProcessChildAnswersDelegate<QuestionT, StatementT> _processChildAnswers;
+		private readonly DoesStatementMatchDelegate<StatementQuestion<StatementT>, StatementT> _doesStatementMatch;
+		private readonly AreEnoughToAnswerDelegate<StatementQuestion<StatementT>, StatementT> _areEnoughToAnswer;
+		private readonly CreateAnswerDelegate<StatementQuestion<StatementT>, StatementT> _createAnswer;
+		private readonly GetNestedQuestionsDelegate<StatementQuestion<StatementT>> _getNestedQuestions;
+		private readonly ProcessChildAnswersDelegate<StatementQuestion<StatementT>, StatementT> _processChildAnswers;
 
 		public StatementQuestion(
-			DoesStatementMatchDelegate<QuestionT, StatementT> doesStatementMatch,
-			CreateAnswerDelegate<QuestionT, StatementT> createAnswer,
-			AreEnoughToAnswerDelegate<QuestionT, StatementT> areEnoughToAnswer = null,
-			GetNestedQuestionsDelegate<QuestionT> getNestedQuestions = null,
-			ProcessChildAnswersDelegate<QuestionT, StatementT> processChildAnswers = null)
+			DoesStatementMatchDelegate<StatementQuestion<StatementT>, StatementT> doesStatementMatch,
+			CreateAnswerDelegate<StatementQuestion<StatementT>, StatementT> createAnswer,
+			AreEnoughToAnswerDelegate<StatementQuestion<StatementT>, StatementT> areEnoughToAnswer = null,
+			GetNestedQuestionsDelegate<StatementQuestion<StatementT>> getNestedQuestions = null,
+			ProcessChildAnswersDelegate<StatementQuestion<StatementT>, StatementT> processChildAnswers = null)
 		{
 			if (doesStatementMatch == null) throw new ArgumentNullException(nameof(doesStatementMatch));
 			if (createAnswer == null) throw new ArgumentNullException(nameof(createAnswer));
@@ -57,7 +56,7 @@ namespace Inventor.Core.Questions
 			_processChildAnswers = processChildAnswers ?? ProcessChildAnswers;
 		}
 
-		protected override IAnswer Process(IQuestionProcessingContext<QuestionT> context)
+		protected override IAnswer Process(IQuestionProcessingContext<StatementQuestion<StatementT>> context)
 		{
 			var statements = context.KnowledgeBase.Statements.Enumerate<StatementT>(context.ActiveContexts).Where(statement => _doesStatementMatch(context, statement)).ToList();
 
@@ -79,17 +78,17 @@ namespace Inventor.Core.Questions
 			return _processChildAnswers(context, statements, valuableAnswers);
 		}
 
-		private Boolean AreEnoughToAnswer(IQuestionProcessingContext<QuestionT> context, ICollection<StatementT> statements)
+		private Boolean AreEnoughToAnswer(IQuestionProcessingContext<StatementQuestion<StatementT>> context, ICollection<StatementT> statements)
 		{
 			return statements.Count > 0;
 		}
 
-		private IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<QuestionT> context)
+		private IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<StatementQuestion<StatementT>> context)
 		{
 			yield break;
 		}
 
-		private IAnswer ProcessChildAnswers(IQuestionProcessingContext<QuestionT> context, ICollection<StatementT> statements, IDictionary<IAnswer, ICollection<IStatement>> childAnswers)
+		private IAnswer ProcessChildAnswers(IQuestionProcessingContext<StatementQuestion<StatementT>> context, ICollection<StatementT> statements, IDictionary<IAnswer, ICollection<IStatement>> childAnswers)
 		{
 			if (childAnswers.Count > 0)
 			{
@@ -104,10 +103,10 @@ namespace Inventor.Core.Questions
 		}
 
 		protected static IAnswer CreateCommonConceptsAnswer(
-			IQuestionProcessingContext<QuestionT> context,
+			IQuestionProcessingContext<StatementQuestion<StatementT>> context,
 			ICollection<StatementT> statements,
 			Func<StatementT, IConcept> statementConceptSelector,
-			Func<QuestionT, IConcept> questionConceptSelector,
+			Func<StatementQuestion<StatementT>, IConcept> questionConceptSelector,
 			Func<ILanguageAnswers, String> answerFormatSelector)
 		{
 			if (statements.Any())
@@ -129,12 +128,12 @@ namespace Inventor.Core.Questions
 		}
 
 		protected static IAnswer CreateCommonBooleanAnswer(
-			IQuestionProcessingContext<QuestionT> context,
+			IQuestionProcessingContext<StatementQuestion<StatementT>> context,
 			ICollection<StatementT> statements,
 			Boolean success,
 			Func<ILanguageAnswers, String> trueAnswerFormatSelector,
 			Func<ILanguageAnswers, String> falseAnswerFormatSelector,
-			Func<QuestionT, Dictionary<String, INamed>> questionConceptsSelector)
+			Func<StatementQuestion<StatementT>, Dictionary<String, INamed>> questionConceptsSelector)
 		{
 			return new BooleanAnswer(
 				success,

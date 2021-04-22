@@ -1,7 +1,7 @@
 ﻿namespace Inventor.Client.ViewModels.Questions
 {
 	[QuestionDescriptor]
-	public sealed class IsQuestion : QuestionViewModel<Core.Questions.IsQuestion>
+	public sealed class IsQuestion : QuestionViewModel<Core.Questions.StatementQuestion<Core.Statements.IsStatement>>
 	{
 		[PropertyDescriptor(true, "QuestionNames.ParamChild")]
 		public Core.IConcept Child
@@ -11,9 +11,9 @@
 		public Core.IConcept Parent
 		{ get; set; }
 
-		public override Core.Questions.IsQuestion BuildQuestion()
+		public override Core.Questions.StatementQuestion<Core.Statements.IsStatement> BuildQuestion()
 		{
-			return new Core.Questions.IsQuestion(Child, Parent);
+			return new Core.Questions.StatementQuestion<Core.Statements.IsStatement>(Child, Parent);
 		}
 	}
 }

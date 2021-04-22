@@ -1,15 +1,15 @@
 ﻿namespace Inventor.Client.ViewModels.Questions
 {
 	[QuestionDescriptor]
-	public sealed class FindSubjectAreaQuestion : QuestionViewModel<Core.Questions.FindSubjectAreaQuestion>
+	public sealed class FindSubjectAreaQuestion : QuestionViewModel<Core.Questions.StatementQuestion<Core.Statements.GroupStatement>>
 	{
 		[PropertyDescriptor(true, "QuestionNames.ParamConcept")]
 		public Core.IConcept Concept
 		{ get; set; }
 
-		public override Core.Questions.FindSubjectAreaQuestion BuildQuestion()
+		public override Core.Questions.StatementQuestion<Core.Statements.GroupStatement> BuildQuestion()
 		{
-			return new Core.Questions.FindSubjectAreaQuestion(Concept);
+			return new Core.Questions.StatementQuestion<Core.Statements.GroupStatement>(Concept);
 		}
 	}
 }
