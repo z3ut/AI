@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Inventor.Core.Base
+using Inventor.Core.Base;
+
+namespace Inventor.Core.Questions
 {
 	public abstract class StatementQuestion<QuestionT, StatementT> : Question<QuestionT>
 		where QuestionT : StatementQuestion<QuestionT, StatementT>
