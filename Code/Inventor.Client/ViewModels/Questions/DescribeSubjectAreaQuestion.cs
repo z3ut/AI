@@ -10,8 +10,19 @@
 		public override Core.Questions.StatementQuestion<Core.Statements.GroupStatement> BuildQuestion()
 		{
 			return new Core.Questions.StatementQuestion<Core.Statements.GroupStatement>(
-				Concept,
-				);
+				doesStatementMatch: (context, statement) =>
+				{
+					return statement.Area == Concept;
+				},
+				createAnswer: (context, statements) =>
+				{
+					return Core.Questions.StatementQuestion<Core.Statements.GroupStatement>.CreateCommonConceptsAnswer(
+						context,
+						statements,
+						r => r.Concept,
+						q => Concept,
+						a => a.SubjectAreaConcepts);
+				});
 		}
 	}
 }

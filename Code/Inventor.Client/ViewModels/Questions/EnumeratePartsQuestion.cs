@@ -9,7 +9,20 @@
 
 		public override Core.Questions.StatementQuestion<Core.Statements.HasPartStatement> BuildQuestion()
 		{
-			return new Core.Questions.StatementQuestion<Core.Statements.HasPartStatement>(Concept);
+			return new Core.Questions.StatementQuestion<Core.Statements.HasPartStatement>(
+				doesStatementMatch: (context, statement) =>
+				{
+					return statement.Whole == Concept;
+				},
+				createAnswer: (context, statements) =>
+				{
+					return Core.Questions.StatementQuestion<Core.Statements.HasPartStatement>.CreateCommonConceptsAnswer(
+						context,
+						statements,
+						r => r.Part,
+						q => Concept,
+						a => a.EnumerateParts);
+				});
 		}
 	}
 }

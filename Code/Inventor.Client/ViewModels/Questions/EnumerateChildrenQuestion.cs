@@ -9,7 +9,20 @@
 
 		public override Core.Questions.StatementQuestion<Core.Statements.IsStatement> BuildQuestion()
 		{
-			return new Core.Questions.StatementQuestion<Core.Statements.IsStatement>(Concept);
+			return new Core.Questions.StatementQuestion<Core.Statements.IsStatement>(
+				doesStatementMatch: (context, statement) =>
+				{
+					return statement.Ancestor == Concept;
+				},
+				createAnswer: (context, statements) =>
+				{
+					return Core.Questions.StatementQuestion<Core.Statements.IsStatement>.CreateCommonConceptsAnswer(
+						context,
+						statements,
+						r => r.Descendant,
+						q => Concept,
+						a => a.Enumerate);
+				});
 		}
 	}
 }

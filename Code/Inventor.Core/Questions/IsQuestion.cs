@@ -32,38 +32,17 @@ namespace Inventor.Core.Questions
 
 		private static IAnswer CreateAnswer(IQuestionProcessingContext<IsQuestion> context, ICollection<IsStatement> statements)
 		{
-			return CreateCommonBooleanAnswer(
-				context,
-				statements,
-				statements.Any(),
-				a => a.IsTrue,
-				a => a.IsFalse,
-				q => new Dictionary<String, INamed>
-				{
-					{ Strings.ParamParent, context.Question.Child },
-					{ Strings.ParamChild, context.Question.Parent },
-				});
+			
 		}
 
 		private static Boolean DoesStatementMatch(IQuestionProcessingContext<IsQuestion> context, IsStatement statement)
 		{
-			return statement.Parent == context.Question.Parent && statement.Child == context.Question.Child;
+			
 		}
 
 		private static IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<IsQuestion> context)
 		{
-			var alreadyViewedConcepts = new HashSet<IConcept>(context.ActiveContexts.OfType<IQuestionProcessingContext<IsQuestion>>().Select(questionContext => questionContext.Question.Child));
-
-			var transitiveStatements = context.KnowledgeBase.Statements.Enumerate<IsStatement>(context.ActiveContexts).Where(isStatement => isStatement.Child == context.Question.Child);
-
-			foreach (var transitiveStatement in transitiveStatements)
-			{
-				var parent = transitiveStatement.Parent;
-				if (!alreadyViewedConcepts.Contains(parent))
-				{
-					yield return new NestedQuestion(new IsQuestion(parent, context.Question.Parent), new IStatement[] { transitiveStatement });
-				}
-			}
+			
 		}
 	}
 }

@@ -102,7 +102,7 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected static IAnswer CreateCommonConceptsAnswer(
+		public static IAnswer CreateCommonConceptsAnswer(
 			IQuestionProcessingContext<StatementQuestion<StatementT>> context,
 			ICollection<StatementT> statements,
 			Func<StatementT, IConcept> statementConceptSelector,
@@ -127,7 +127,7 @@ namespace Inventor.Core.Questions
 			}
 		}
 
-		protected static IAnswer CreateCommonBooleanAnswer(
+		public static IAnswer CreateCommonBooleanAnswer(
 			IQuestionProcessingContext<StatementQuestion<StatementT>> context,
 			ICollection<StatementT> statements,
 			Boolean success,
