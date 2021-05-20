@@ -34,5 +34,42 @@ namespace Inventor.Core.Processors
 			return	(statement.LeftValue == context.Question.LeftValue && statement.RightValue == context.Question.RightValue) ||
 					(statement.RightValue == context.Question.LeftValue && statement.LeftValue == context.Question.RightValue);
 		}
+
+		protected override IEnumerable<NestedQuestion> GetNestedQuestions(IQuestionProcessingContext<ComparisonQuestion> context)
+		{
+			foreach (var statement in context.KnowledgeBase.Statements.Enumerate<ComparisonStatement>(context.ActiveContexts))
+			{
+				if (statement.LeftValue == context.Question.LeftValue)
+				{
+					yield return new NestedQuestion(new ComparisonQuestion(statement.RightValue, context.Question.RightValue), new IStatement[] { statement });
+				}
+				else if (statement.LeftValue == context.Question.RightValue)
+				{
+					yield return new NestedQuestion(new ComparisonQuestion(statement.RightValue, context.Question.LeftValue), new IStatement[] { statement });
+				}
+				else if (statement.RightValue == context.Question.LeftValue)
+				{
+					yield return new NestedQuestion(new ComparisonQuestion(statement.LeftValue, context.Question.RightValue), new IStatement[] { statement });
+				}
+				else if (statement.RightValue == context.Question.RightValue)
+				{
+					yield return new NestedQuestion(new ComparisonQuestion(statement.LeftValue, context.Question.LeftValue), new IStatement[] { statement });
+				}
+			}
+		}
+
+		protected override IAnswer ProcessChildAnswers(IQuestionProcessingContext<ComparisonQuestion> context, ICollection<ComparisonStatement> statements, IDictionary<IAnswer, ICollection<IStatement>> childAnswers)
+		{
+			foreach (var answer in childAnswers)
+			{
+				if ()
+				{
+					answer.Key.Explanation.Expand(answer.Value);
+					return answer.Key;
+				}
+			}
+
+			return Answer.CreateUnknown(context.Language);
+		}
 	}
 }
