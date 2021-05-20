@@ -58,14 +58,22 @@ namespace Inventor.Core.Processors
 			}
 		}
 
-		protected override IAnswer ProcessChildAnswers(IQuestionProcessingContext<ComparisonQuestion> context, ICollection<ComparisonStatement> statements, IDictionary<IAnswer, ICollection<IStatement>> childAnswers)
+		protected override IAnswer ProcessChildAnswers(IQuestionProcessingContext<ComparisonQuestion> context, ICollection<ComparisonStatement> statements, ICollection<ChildAnswer> childAnswers)
 		{
 			foreach (var answer in childAnswers)
 			{
-				if ()
+				var conceptAnswer = answer.Answer as ConceptAnswer;
+				var childQuestion = (ComparisonQuestion) answer.Question;
+				//var transitive = (ComparisonStatement) answer.TransitiveStatements.First();
+				if (conceptAnswer != null)
 				{
-					answer.Key.Explanation.Expand(answer.Value);
-					return answer.Key;
+					var transitiveValue = new List<IConcept> { context.Question.LeftValue, context.Question.RightValue }.Intersect(new List<IConcept> { childQuestion.LeftValue, childQuestion.RightValue }).Single();
+
+					if ()
+					{
+						answer.Answer.Explanation.Expand(answer.TransitiveStatements);
+						return answer.Answer;
+					}
 				}
 			}
 
