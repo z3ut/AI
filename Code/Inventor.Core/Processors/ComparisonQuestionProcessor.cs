@@ -14,14 +14,7 @@ namespace Inventor.Core.Processors
 		{
 			if (statements.Any())
 			{
-				var statement = statements.First();
-				var text = new FormattedText();
-				text.Add(statement.DescribeTrue(context.Language));
-
-				return new StatementAnswer(
-					statement,
-					text,
-					new Explanation(statements));
+				return createAnswer(statements.First(), context.Language);
 			}
 			else
 			{
@@ -58,21 +51,73 @@ namespace Inventor.Core.Processors
 			}
 		}
 
+		private static StatementAnswer createAnswer(ComparisonStatement statement, ILanguage language, ICollection<IStatement> transitiveStatements = null)
+		{
+			var text = new FormattedText();
+			text.Add(statement.DescribeTrue(language));
+
+			var explanation = new Explanation(statement);
+			if (transitiveStatements != null)
+			{
+				explanation.Expand(transitiveStatements);
+			}
+
+			return new StatementAnswer(statement, text, explanation);
+		}
+
+#warning Проверить на непротеворечивость систем сравнения значений и последовательности процессов.
+
 		protected override IAnswer ProcessChildAnswers(IQuestionProcessingContext<ComparisonQuestion> context, ICollection<ComparisonStatement> statements, ICollection<ChildAnswer> childAnswers)
 		{
 			foreach (var answer in childAnswers)
 			{
-				var conceptAnswer = answer.Answer as ConceptAnswer;
-				var childQuestion = (ComparisonQuestion) answer.Question;
-				//var transitive = (ComparisonStatement) answer.TransitiveStatements.First();
-				if (conceptAnswer != null)
+				var childStatement = (answer.Answer as StatementAnswer)?.Result as ComparisonStatement;
+				if (childStatement != null)
 				{
-					var transitiveValue = new List<IConcept> { context.Question.LeftValue, context.Question.RightValue }.Intersect(new List<IConcept> { childQuestion.LeftValue, childQuestion.RightValue }).Single();
+					var transitiveStatement = (ComparisonStatement) answer.TransitiveStatements.Single();
+					var childStatementValues = new HashSet<IConcept> { childStatement.LeftValue, childStatement.RightValue };
+					var transitiveStatementValues = new HashSet<IConcept> { transitiveStatement.LeftValue, transitiveStatement.RightValue };
+					var transitiveValue = childStatementValues.Intersect(transitiveStatementValues).Single();
+					ComparisonStatement resultStatement = null;
 
-					if ()
+					/*if (childStatement.ComparisonSign == SystemConcepts.IsEqualTo && transitiveStatement.ComparisonSign == SystemConcepts.IsEqualTo)
 					{
-						answer.Answer.Explanation.Expand(answer.TransitiveStatements);
-						return answer.Answer;
+						resultStatement = new ComparisonStatement(
+							context.Question.LeftValue,
+							context.Question.RightValue,
+							SystemConcepts.IsEqualTo);
+					}*/
+					if (childStatement.ComparisonSign == SystemConcepts.IsEqualTo)
+					{
+						resultStatement = new ComparisonStatement(
+							transitiveStatement.LeftValue != transitiveValue ? transitiveStatement.LeftValue : ,
+							transitiveStatement.RightValue != transitiveValue ? transitiveStatement.RightValue : ,
+							transitiveStatement.ComparisonSign);
+					}
+					else if (transitiveStatement.ComparisonSign == SystemConcepts.IsEqualTo)
+					{
+						resultStatement = new ComparisonStatement(
+							childStatement.LeftValue != transitiveValue ? childStatement.LeftValue : ,
+							childStatement.RightValue != transitiveValue ? childStatement.RightValue : ,
+							childStatement.ComparisonSign);
+					}
+					else if ()
+					{
+						1
+					}
+					else if ()
+					{
+						1
+					}
+					else if ()
+					{
+						1
+					}
+
+					if (resultStatement != null)
+					{
+						
+						return createAnswer(resultStatement, context.Language, answer.TransitiveStatements);
 					}
 				}
 			}
